@@ -1,12 +1,13 @@
-package com.aricalot.usingMaven;
+package com.aricalot.maven.view;
 
-import com.aricalot.usingMaven.domain.Student;
+import com.aricalot.maven.dao.StudentDao;
+import com.aricalot.maven.domain.Student;
 import java.util.*;
 
 public class Display {
     Scanner sc = new Scanner(System.in);
     Scanner s = new Scanner(System.in);
-    StudentManage sm = new StudentManage();
+    StudentDao dbm = new StudentDao();
 
     public int displayMenu(){
         System.out.print("1. Add Names\n2. Edit Names\n3. Delete Names\n4. Display Names\n"+
@@ -33,43 +34,45 @@ public class Display {
 
     public void studentInsert(){
         Student st = studentData();
-        sm.insertIntoStudent(st.getName(),st.getAge(),st.getGrade(),st.getSchool());
+        dbm.insert(st);
     }
 
     public void studentEdit(){
         System.out.print("Which student do you want to Edit?\nStudent ID: ");
         int id = sc.nextInt();
-        boolean found = sm.findStudent(id);
+        boolean found = dbm.find(id);
         if (!found) {
             System.out.println("Student ID: "+ id +" not Found!");
         } else {
             Student st = studentData();
-            sm.updateStudent(st.getName(),st.getAge(),st.getGrade(),st.getSchool(),id);
+            dbm.update(st);
         }
     }
 
     public void studentDelete(){
         System.out.println("which student do you want to delete?");
         int id = sc.nextInt();
-        boolean found = sm.findStudent(id);
+        boolean found = dbm.find(id);
         if (!found) {
             System.out.println("Student ID "+ id +" not Found!");
         } else {
-            sm.deleteStudent(id);
+            dbm.delete(id);
         }
     }
 
     public void studentDisplay(){
         System.out.println("1. Ascending \n2. Descending ");
-        int order = sc.nextInt();
-        if (order == 1 || order == 2){
-            ArrayList<Student> al = sm.selectFromStudent(order);
-            ListIterator<Student> li = al.listIterator();
-            int i = 1;
-            while (li.hasNext()){
-                System.out.println(i+". "+li.next());
-                i++;
-            }
+        int sortOrder = sc.nextInt();
+        if (sortOrder == 1 || sortOrder == 2){
+            ArrayList<Object> o = dbm.findAll(sortOrder);
+            System.out.println(o.size());
+            o.forEach(i->{
+//            ListIterator<Student> li = al.listIterator();
+//            int i = 1;
+//            while (li.hasNext()){
+                System.out.println(((Student)i).toString());
+//                i++;
+            });
         }
         else {
             System.out.println("Please select from menu.");

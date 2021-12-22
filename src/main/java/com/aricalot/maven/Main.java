@@ -1,8 +1,14 @@
-package com.aricalot.usingMaven;
+package com.aricalot.maven;
+
+import com.aricalot.maven.dao.ConnectionFactory;
+import com.aricalot.maven.view.Display;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         String exit = "Y";
         while (exit.equalsIgnoreCase("Y")) {
             Display display = new Display();
@@ -27,5 +33,7 @@ public class Main {
             exit = display.displayRepeat();
         }
         System.out.println("Thank You!!");
+        Connection connection = ConnectionFactory.getInstance();
+        connection.close();
     }
 }

@@ -1,6 +1,14 @@
-package com.aricalot.usingMaven.domain;
+package com.aricalot.maven.domain;
 
-public class Student {
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Data
+public class Student{
     private int id;
     final String name;
     final int age;
@@ -20,22 +28,6 @@ public class Student {
         this.age = age;
         this.grade = grade;
         this.school = school;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public int getGrade() {
-        return grade;
-    }
-
-    public String getSchool() {
-        return school;
     }
 
     @Override
