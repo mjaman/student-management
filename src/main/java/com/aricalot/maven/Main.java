@@ -1,8 +1,9 @@
 package com.aricalot.maven;
 
-import com.aricalot.maven.dao.ConnectionFactory;
+import com.aricalot.maven.control.SchoolController;
+import com.aricalot.maven.control.StudentController;
 import com.aricalot.maven.view.Display;
-
+import com.aricalot.maven.dao.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -10,26 +11,25 @@ public class Main {
 
     public static void main(String[] args) throws SQLException {
         String exit = "Y";
-        while (exit.equalsIgnoreCase("Y")) {
-            Display display = new Display();
+        Display display = new Display();
+        int mainMenu = display.mainMenu();
 
-            int menu = display.displayMenu();
-            switch (menu) {
-                case 1: //add
-                    display.studentInsert();
+        while (exit.equalsIgnoreCase("Y")) {
+
+            SchoolController schoolController = new SchoolController();
+            StudentController studentController = new StudentController();
+            switch (mainMenu){
+                case 1:
+                    schoolController.School();
                     break;
-                case 2: //Edit
-                    display.studentEdit();
-                    break;
-                case 3: //Delete
-                    display.studentDelete();
-                    break;
-                case 4: //Display
-                    display.studentDisplay();
+                case 2:
+                    studentController.Student();
                     break;
                 default:
-                    System.out.println("Please select form the menu.");
+                    System.out.println("select form menu");
             }
+
+
             exit = display.displayRepeat();
         }
         System.out.println("Thank You!!");

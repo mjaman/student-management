@@ -1,29 +1,29 @@
 package com.aricalot.maven.dao;
 
-import com.aricalot.maven.domain.Student;
+import com.aricalot.maven.domain.School;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class StudentDao implements BaseDao {
+public class SchoolDao implements BaseDao {
     Connection conn = null;
 
     @Override
     public void insert(Object o) {
-        Student s = (Student) o;
+        School s = (School) o;
         try {
             conn = ConnectionFactory.getInstance();
-            String insertSQL = "INSERT INTO students (name,age, class, school_id) VALUES (?, ?, ? ,?)" ;
+            String insertSQL = "INSERT INTO school (name,address, contact, logo) VALUES (?, ?, ? ,?)" ;
 
             PreparedStatement pst = conn.prepareStatement(insertSQL);
             pst.setString(1,s.getName());
-            pst.setInt(2,s.getAge());
-            pst.setInt(3,s.getGrade());
-            pst.setInt(4,s.getSchool_id());
+            pst.setString(2,s.getAddress());
+            pst.setInt(3,s.getContact());
+            pst.setString(4,s.getLogo());
 
             int rows = pst.executeUpdate();
 
             if (rows > 0 ){
-                System.out.println("Student Added");
+                System.out.println("School Added");
             }
         }
         catch (SQLException e) {
@@ -33,21 +33,21 @@ public class StudentDao implements BaseDao {
 
     @Override
     public void update(Object o) {
-        Student s = (Student) o;
+        School s = (School) o;
         try{
             conn = ConnectionFactory.getInstance();
-            String updateSQL = "UPDATE students SET name = ?, age = ?, class = ?, school_id = ? WHERE id = ?";
+            String updateSQL = "UPDATE schools SET name = ?, age = ?, class = ?, school = ? WHERE id = ?";
             PreparedStatement pst = conn.prepareStatement(updateSQL);
             pst.setString(1,s.getName());
-            pst.setInt(2,s.getAge());
-            pst.setInt(3,s.getGrade());
-            pst.setInt(4,s.getSchool_id());
+            pst.setString(2,s.getAddress());
+            pst.setInt(3,s.getContact());
+            pst.setString(4,s.getLogo());
             pst.setInt(5,s.getId());
 
             int rows = pst.executeUpdate();
 
             if (rows > 0 ){
-                System.out.println("Student ID: " + s.getId() + " Updated");
+                System.out.println("School ID: " + s.getId() + " Updated");
             }
         }
         catch (Exception e){
@@ -57,16 +57,16 @@ public class StudentDao implements BaseDao {
 
     @Override
     public void delete(Object o) {
-        Student s = (Student) o;
+        School s = (School) o;
         try{
             conn = ConnectionFactory.getInstance();
 
-            String deleteSQL = "DELETE FROM students WHERE id =?";
+            String deleteSQL = "DELETE FROM schools WHERE id =?";
             PreparedStatement pst = conn.prepareStatement(deleteSQL);
             pst.setInt(1,s.getId());
             int rows = pst.executeUpdate();
             if(rows>0){
-                System.out.println("Student ID: " + s.getId() + " Deleted Successfully!");
+                System.out.println("School ID: " + s.getId() + " Deleted Successfully!");
             }
         }
         catch (Exception e){
@@ -78,7 +78,7 @@ public class StudentDao implements BaseDao {
         boolean found = false;
         try{
             conn = ConnectionFactory.getInstance();
-            String findSQL = "SELECT id,name FROM students WHERE id =?";
+            String findSQL = "SELECT id FROM schools WHERE id =?";
             PreparedStatement pst = conn.prepareStatement(findSQL);
             pst.setInt(1,id);
             ResultSet result = pst.executeQuery();
@@ -95,31 +95,28 @@ public class StudentDao implements BaseDao {
     @Override
     public ArrayList<Object> findAll(int sortOrder) {
         ArrayList<Object> al = new ArrayList<>();
-        Student studentData;
+        School schoolData;
         try{
             conn = ConnectionFactory.getInstance();
-            String order = "asc";
-
+            String selectSQL = null;
             if (sortOrder == 1){
-                System.out.println("Students in Ascending order are: ");
-
+                System.out.println("Schools in Ascending order are: ");
+                selectSQL = "SELECT * FROM schools ORDER BY name asc";
             }else if(sortOrder == 2){
-                System.out.println("Students in Descending order are: ");
-                order = "desc";
+                System.out.println("Schools in Descending order are: ");
+                selectSQL = "SELECT * FROM schools ORDER BY name desc";
             }
-//            String selectSQL = "SELECT * FROM students ORDER BY name " + order;
-            String selectSQL = "SELECT st.id,st.name,st.age,st.class,sc.name AS 'school name'FROM students st JOIN schools sc ON st.school_id = sc.id ORDER BY name " + order;
             Statement st = conn.createStatement();
             ResultSet result = st.executeQuery(selectSQL);
             while (result.next()){
-                studentData =  new Student(
+                schoolData =  new School(
                         result.getInt("id"),
-                        result.getString("st.name"),
-                        result.getInt("age"),
-                        result.getInt("class"),
-                        result.getString("school name")
+                        result.getString("name"),
+                        result.getString("address"),
+                        result.getInt("contact"),
+                        result.getString("logo")
                 );
-                System.out.println(studentData);
+                System.out.println(schoolData);
             }
         }
         catch (Exception e){
